@@ -1,5 +1,6 @@
 import { Application, Request, Response, json } from "express";
 import cors from "cors";
+
 import morgan from "morgan";
 import auth from "./router/authenticationRouter";
 export const mainApp = (app: Application) => {
