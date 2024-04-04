@@ -23,5 +23,17 @@ export const mainApp = (app: Application) => {
       });
     }
   });
+  app.get("/", (req: Request, res: Response) => {
+    try {
+      return res.status(200).json({
+        message: "Success......!!",
+      });
+    } catch (error: any) {
+      return res.status(400).json({
+        message: "Error occured",
+        data: error.message,
+      });
+    }
+  });
   app.use("/api/v1/", auth);
 };

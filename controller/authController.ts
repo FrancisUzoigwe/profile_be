@@ -34,7 +34,7 @@ export const signinUser = async (req: Request, res: Response) => {
       if (checked) {
         return res.status(201).json({
           message: "Signed in sucessfully..!!",
-          data: checked,
+          data: user,
         });
       } else {
         return res.status(403).json({
@@ -43,7 +43,7 @@ export const signinUser = async (req: Request, res: Response) => {
       }
     } else {
       return res.status(400).json({
-        message: "Error occured while signing in",
+        message: "Account doesn't exist in the database",
       });
     }
   } catch (error: any) {
@@ -70,39 +70,21 @@ export const deleteUserAccount = async (req: Request, res: Response) => {
   }
 };
 
-export const updateUserImage = async (req: Request, res: Response) => {
-  try {
-    const { userID } = req.params;
-    const { public_id, secure_url }: any = await streamUpload(req);
-
-    const user = await authentication.findByIdAndUpdate(
-      userID,
-      {
-        image: secure_url,
-        imageID: public_id,
-      },
-      { new: true }
-    );
-
-    return res.status(201).json({
-      message: "Image updated successfully",
-      data: user,
-    });
-  } catch (error: any) {
-    return res.status(400).json({
-      message: "Error updating user image",
-      data: error.message,
-    });
-  }
-};
-
 export const updateUserInfo = async (req: Request, res: Response) => {
   try {
     const { userID } = req.params;
+    const { public_id, secure_url }: any = await streamUpload(req);
     const { firstName, lastName, phoneNumber, address } = req.body;
     const user = await authentication.findByIdAndUpdate(
       userID,
-      { firstName, lastName, phoneNumber, address },
+      {
+        firstName,
+        lastName,
+        phoneNumber,
+        address,
+        image: secure_url,
+        imageID: public_id,
+      },
       { new: true }
     );
 
@@ -116,6 +98,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const getAllUser = async (req: Request, res: Response) => {
   try {
     const users = await authentication.find().sort({
@@ -137,7 +120,7 @@ export const getAllUser = async (req: Request, res: Response) => {
 export const getOneUser = async (req: Request, res: Response) => {
   try {
     const { userID } = req.params;
-    const user = await authentication.findOne({ userID });
+    const user = await authentication.findById(userID);
 
     return res.status(200).json({
       message: "User's details are available",
