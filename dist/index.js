@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mainApp_1 = require("./mainApp");
 const profileDB_1 = require("./config/profileDB");
-const port = 2345;
+// const port: number = 2345;
 const app = (0, express_1.default)();
 (0, mainApp_1.mainApp)(app);
-const server = app.listen(port, () => {
+const server = app.listen(() => {
     (0, profileDB_1.profileDB)();
 });
 process.on("uncaughtException", (error) => {
